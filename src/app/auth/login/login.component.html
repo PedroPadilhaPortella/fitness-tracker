@@ -1,1 +1,23 @@
-<p>login works!</p>
+<section class="login">
+  <form class="login-form" [formGroup]="form">
+
+    <mat-form-field>
+      <input matInput type="email" formControlName="email" placeholder="Your email">
+        <mat-error *ngIf="form.get('email')?.touched && form.get('email')?.hasError('required')">
+          Field must not be empty
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="password" formControlName="password"  placeholder="Your password">
+        <mat-error *ngIf="form.get('password')?.touched && form.get('password')?.hasError('required')">
+          Field must not be empty
+        </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+      Login
+    </button>
+
+  </form>
+</section>
