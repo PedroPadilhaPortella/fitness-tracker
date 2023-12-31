@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NavbarItem } from '../../interfaces/navbar-item.interface';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -6,6 +7,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./sidenav-list.component.css']
 })
 export class SidenavListComponent {
+  @Input('items') navbarItems: NavbarItem[] = [];
   @Output('sidenav-close') sidenavClose = new EventEmitter<void>();
 
   onCloseSidenav() {

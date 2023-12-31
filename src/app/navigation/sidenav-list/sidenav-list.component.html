@@ -1,5 +1,34 @@
 <mat-nav-list>
-  <a mat-list-item routerLink="/signup" (click)="onCloseSidenav()">
+  <mat-list-item *ngFor="let item of navbarItems">
+
+    <a *ngIf="item.route; else noRouteItem" [routerLink]="item.route" (click)="onCloseSidenav()">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span  class="nav-caption">{{ item.name }}</span>
+    </a>
+
+    <ng-template #noRouteItem>
+      <a (click)="onCloseSidenav()">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span class="nav-caption">{{ item.name }}</span>
+      </a>
+    </ng-template>
+
+  </mat-list-item>
+  <!-- <span *ngFor="let item of navbarItems">
+    <a *ngIf="item.route; else noRouteItem" mat-list-item [routerLink]="item.route" (click)="onCloseSidenav()">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span class="nav-caption">{{ item.name }}</span>
+    </a>
+    <ng-template #noRouteItem>
+      <mat-list-item>
+        <button mat-icon-button  (click)="onCloseSidenav()">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span class="nav-caption">{{ item.name }}</span>
+        </button>
+      </mat-list-item>
+    </ng-template>
+  </span> -->
+  <!-- <a mat-list-item routerLink="/signup" (click)="onCloseSidenav()">
     <mat-icon>face</mat-icon>
     <span class="nav-caption">Singup</span>
   </a>
@@ -16,5 +45,5 @@
       <mat-icon>eject</mat-icon>
       <span class="nav-caption">Logout</span>
     </button>
-  </mat-list-item>
+  </mat-list-item> -->
 </mat-nav-list>

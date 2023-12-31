@@ -1,1 +1,17 @@
-<p>new-training works!</p>
+<div class="new-training">
+  <mat-card>
+    <mat-card-title>Time to start a workout!</mat-card-title> 
+    <mat-card-content>
+      <mat-form-field>
+        <mat-select placeholder="">
+          <mat-option value="crunches">Crunches</mat-option>
+          <mat-option value="touch-toes">Touch Toes</mat-option>
+          <mat-option value="side-lunges">Side Lunges</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content> 
+    <mat-card-actions>
+      <button mat-button (click)="onStartTraining()">Start</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

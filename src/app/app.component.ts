@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NavbarItem } from './interfaces/navbar-item.interface'
 
 @Component({
   selector: 'app-root',
@@ -11,11 +12,7 @@ export class AppComponent {
     { name: 'SignUp', route: '/signup', icon: 'face'},
     { name: 'Login', route: '/login', icon: 'input'},
     { name: 'Training', route: '/training', icon: 'fitness_center'},
+    { name: 'Logout', route: null, icon: 'eject'},
   ]
 }
 
-interface NavbarItem {
-  name: string;
-  route: string;
-  icon: string;
-}

@@ -7,7 +7,13 @@
   <div><a routerLink="/">LOGO</a></div>
   <div class="sidenav-links">
     <ul class="navigation-items">
-      <li>
+      <li *ngFor="let item of navbarItems">
+        <a *ngIf="item.route; else noRouteItem" [routerLink]="item.route">{{ item.name }}</a>
+        <ng-template #noRouteItem>
+          <a [routerLink]="item.route">{{ item.name }}</a>
+        </ng-template>
+      </li>
+      <!-- <li>
         <a routerLink="/signup">Singup</a>
       </li>
       <li>
@@ -18,7 +24,7 @@
       </li>
       <li>
         <a>Logout</a>
-      </li>
+      </li> -->
     </ul>
   </div>
 </mat-toolbar>
