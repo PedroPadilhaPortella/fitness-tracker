@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NavbarItem } from '../../interfaces/navbar-item.interface';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -7,10 +8,30 @@ import { NavbarItem } from '../../interfaces/navbar-item.interface';
   styleUrls: ['./sidenav-list.component.css']
 })
 export class SidenavListComponent {
-  @Input('items') navbarItems: NavbarItem[] = [];
+  
   @Output('sidenav-close') sidenavClose = new EventEmitter<void>();
+
+  isAuth = false;
+  authSubscription!: Subscription;
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.authSubscription = this.authService.authChange.subscribe((isAuth) => {
+      this.isAuth = isAuth;
+    });
+  }
 
   onCloseSidenav() {
     this.sidenavClose.emit();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.onCloseSidenav();
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription.unsubscribe();
   }
 }

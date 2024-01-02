@@ -7,24 +7,18 @@
   <div><a routerLink="/">LOGO</a></div>
   <div class="sidenav-links">
     <ul class="navigation-items">
-      <li *ngFor="let item of navbarItems">
-        <a *ngIf="item.route; else noRouteItem" [routerLink]="item.route">{{ item.name }}</a>
-        <ng-template #noRouteItem>
-          <a [routerLink]="item.route">{{ item.name }}</a>
-        </ng-template>
-      </li>
-      <!-- <li>
+      <li *ngIf="!isAuth">
         <a routerLink="/signup">Singup</a>
       </li>
-      <li>
+      <li *ngIf="!isAuth">
         <a routerLink="/login">Login</a>
       </li>
-      <li>
+      <li *ngIf="isAuth">
         <a routerLink="/training">Training</a>
       </li>
-      <li>
-        <a>Logout</a>
-      </li> -->
+      <li *ngIf="isAuth">
+        <a style="cursor: pointer;" (click)="logout()">Logout</a>
+      </li>
     </ul>
   </div>
 </mat-toolbar>

@@ -1,5 +1,5 @@
 <section class="login">
-  <form class="login-form" [formGroup]="form">
+  <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <mat-form-field>
       <input matInput type="email" formControlName="email" placeholder="Your email">
