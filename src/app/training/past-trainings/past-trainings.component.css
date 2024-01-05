@@ -1,0 +1,20 @@
+.filter-training {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.filter-input {
+  padding: 0.5rem;
+  border: none;
+  border-bottom: 1.5px solid #00000088;
+  margin: 0.5rem;
+}
+
+.filter-input:focus {
+  background-color: #3f51b55b;
+  border: none;
+  border-bottom: 1.5px solid #3f51b5;
+}
