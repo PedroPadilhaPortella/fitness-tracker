@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SignupComponent implements OnInit {
   maxDate: any;
+  emailErrorMessage: string = ''
 
   constructor(private authService: AuthService) { }
   
@@ -20,7 +21,12 @@ export class SignupComponent implements OnInit {
   
   onSubmit(form: NgForm) {
     const authData: AuthData = { email: form.value.email, password: form.value.password }
-    this.authService.registerUser(authData);
+    this.authService.registerUser(authData).subscribe({
+      next: () => {},
+      error: (error) => {
+        this.emailErrorMessage = error.message;
+      },
+    });
   }
 
 }

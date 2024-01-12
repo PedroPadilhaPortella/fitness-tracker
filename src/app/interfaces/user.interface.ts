@@ -1,4 +1,11 @@
 export interface User {
+  id: string;
   email: string;
-  userId: string;
+  password: string;
+}
+
+export interface LoggedUser {
+  id: string;
+  email: string;
+  espireDate: number;
 }

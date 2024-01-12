@@ -14,10 +14,15 @@
           Field must not be empty
         </mat-error>
     </mat-form-field>
+    
+    <mat-error *ngIf="logginErrorMessage">
+      {{ logginErrorMessage }}
+    </mat-error>
 
     <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
       Login
     </button>
+
 
   </form>
 </section>

@@ -10,6 +10,7 @@ import { AuthData } from '../../interfaces/auth-modal.interface';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
+  logginErrorMessage: string = ''
 
   constructor(
     private authService: AuthService,
@@ -25,7 +26,12 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     const authData: AuthData = { email: this.form.value.email, password: this.form.value.password }
-    this.authService.login(authData);
+    this.authService.login(authData).subscribe({
+      next: () => {},
+      error: (error) => {
+        this.logginErrorMessage = error.message;
+          this.form.reset();
+      },
+    });
   }
-
 }

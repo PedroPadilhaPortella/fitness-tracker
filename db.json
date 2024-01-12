@@ -1,5 +1,17 @@
 {
-  "users": [],
+  "users": [
+    {
+      "email": "pedro.kadjin.sg@gmail.com",
+      "password": "pedro123",
+      "id": "216"
+    },
+    {
+      "email": "pedro.kadjin1.sg@gmail.com",
+      "password": "pedro2w2321",
+      "id": "706"
+    }
+  ],
+  "loggedUsers": [],
   "exercises": [
     {
       "id": "1",

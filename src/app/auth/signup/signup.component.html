@@ -25,6 +25,10 @@
     <mat-checkbox ngModel name="agree" color="primary" required>
       Agree to Terms and Conditions.
     </mat-checkbox>
+
+    <mat-error *ngIf="emailErrorMessage">
+      {{ emailErrorMessage }}
+    </mat-error>
     
     <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
       Submit
