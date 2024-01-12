@@ -1,0 +1,55 @@
+{
+  "users": [],
+  "exercises": [
+    {
+      "id": "1",
+      "name": "Crunches",
+      "duration": 30,
+      "calories": 8
+    },
+    {
+      "id": "2",
+      "name": "Touch Toes",
+      "duration": 180,
+      "calories": 15
+    },
+    {
+      "id": "3",
+      "name": "Side Lunges",
+      "duration": 120,
+      "calories": 18
+    },
+    {
+      "id": "4",
+      "name": "Burpees",
+      "duration": 60,
+      "calories": 8
+    }
+  ],
+  "finishedExercises": [
+    {
+      "id": "1704927555129",
+      "name": "Crunches",
+      "duration": 0.6,
+      "calories": 0.16,
+      "date": "2024-01-10T22:59:15.129Z",
+      "state": "cancelled"
+    },
+    {
+      "id": "1704930246221",
+      "name": "Crunches",
+      "duration": 30,
+      "calories": 8,
+      "date": "2024-01-10T23:44:06.221Z",
+      "state": "completed"
+    },
+    {
+      "id": "1704941085832",
+      "name": "Crunches",
+      "duration": 0.6,
+      "calories": 0.16,
+      "date": "2024-01-11T02:44:45.832Z",
+      "state": "cancelled"
+    }
+  ]
+}

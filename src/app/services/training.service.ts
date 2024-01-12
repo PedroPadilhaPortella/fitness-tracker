@@ -1,35 +1,38 @@
 import { Injectable } from '@angular/core';
 import { Exercise } from '../interfaces/exercise.interface';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainingService {
+  private avaliableExercises: Exercise[] = []
   private runningExercise: Exercise | null = null;
-  private exercises: Exercise[] = [];
 
   exerciseChanged = new Subject<Exercise | null>();
+  exercisesChanged = new Subject<Exercise[]>();
+  finishedExercisesChanged = new Subject<Exercise[]>();
 
-  private avaliableExercises: Exercise[] = [
-    { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
-    { id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15 },
-    { id: 'side-lunges', name: 'Side Lunges', duration: 120, calories: 18 },
-    { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
-  ]
+  constructor(private http: HttpClient) { }
 
-  constructor() { }
-
-  getAvaliableExercises() {
-    return this.avaliableExercises.slice();
+  fetchAvaliableExercises() {
+    return this.http.get<Exercise[]>('http://localhost:3000/exercises')
+      .subscribe((exercises) => {
+        this.avaliableExercises = exercises
+        this.exercisesChanged.next([...this.avaliableExercises])
+      })
   }
 
   getRunningExercise() {
     return { ...this.runningExercise } as Exercise;
   }
   
-  getCompletedOrCancelExercise() {
-    return this.exercises.slice();
+  fetchFinishedExercise() {
+    return this.http.get<Exercise[]>('http://localhost:3000/finishedExercises')
+      .subscribe((exercises) => {
+        this.finishedExercisesChanged.next(exercises)
+      })
   }
 
   startExercise(id: string) {
@@ -38,20 +41,36 @@ export class TrainingService {
   }
 
   completeExercise() {
-    this.exercises.push({ ...this.runningExercise, date: new Date(), state: 'completed'} as Exercise);
-    this.runningExercise = null;
-    this.exerciseChanged.next(null);
+    const exercise = {
+      ...this.runningExercise,
+      id: new Date().getTime().toString(),
+      date: new Date(), 
+      state: 'completed'
+    } as Exercise;
+
+    this.saveExercise(exercise).subscribe((response) => {
+      this.runningExercise = null;
+      this.exerciseChanged.next(null);
+    });
   }
 
   cancelExercise(progress: number) {
-    this.exercises.push({ 
+    const exercise = { 
       ...this.runningExercise, 
+      id: new Date().getTime().toString(),
       date: new Date(), 
       duration: this.runningExercise!.duration * (progress / 100),
       calories: this.runningExercise!.calories * (progress / 100),
       state: 'cancelled'
-    } as Exercise);
-    this.runningExercise = null;
-    this.exerciseChanged.next(null);
+    } as Exercise;
+
+    this.saveExercise(exercise).subscribe((response) => {
+      this.runningExercise = null;
+      this.exerciseChanged.next(null);
+    });
+  }
+
+  private saveExercise(exercise: Exercise): Observable<Exercise> {
+    return this.http.post<Exercise>('http://localhost:3000/finishedExercises', exercise);
   }
 }
