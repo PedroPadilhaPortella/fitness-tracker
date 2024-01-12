@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AuthData } from '../../interfaces/auth-modal.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -10,10 +11,10 @@ import { AuthData } from '../../interfaces/auth-modal.interface';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
-  logginErrorMessage: string = ''
 
   constructor(
     private authService: AuthService,
+    private snackBar: MatSnackBar,
     private fb: FormBuilder,
   ) { }
 
@@ -27,10 +28,13 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     const authData: AuthData = { email: this.form.value.email, password: this.form.value.password }
     this.authService.login(authData).subscribe({
-      next: () => {},
       error: (error) => {
-        this.logginErrorMessage = error.message;
-          this.form.reset();
+        this.form.reset();
+        this.snackBar.open(error.message, 'Dismiss', { 
+          horizontalPosition: 'end', 
+          verticalPosition: 'bottom', 
+          duration: 3000,
+        })
       },
     });
   }

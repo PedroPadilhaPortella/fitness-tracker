@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthData } from '../interfaces/auth-modal.interface';
 import { LoggedUser, User } from '../interfaces/user.interface';
-import { Subject, map, switchMap, tap } from 'rxjs';
+import { Subject, catchError, map, switchMap, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -64,7 +64,8 @@ export class AuthService {
         this.loggedUser = user;
         this.loggedUserChange.next(user);
         this.router.navigate(['/training']);
-      }));
+      })
+    );
   }
 
   logout() {
