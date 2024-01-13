@@ -32,6 +32,6 @@ export class SidenavListComponent {
   }
 
   ngOnDestroy(): void {
-    this.authSubscription.unsubscribe();
+    if (this.authSubscription) this.authSubscription.unsubscribe();
   }
 }
