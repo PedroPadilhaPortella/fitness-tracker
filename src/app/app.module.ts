@@ -17,29 +17,24 @@ import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { StopTrainingComponent } from './training/current-training/stop-training.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthModule } from './auth/auth.module';
+import { TrainingModule } from './training/training.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignupComponent,
-    LoginComponent,
-    TrainingComponent,
-    CurrentTrainingComponent,
-    NewTrainingComponent,
-    PastTrainingsComponent,
     WelcomeComponent,
     HeaderComponent,
     SidenavListComponent,
-    StopTrainingComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
+    AppRoutingModule,
     MaterialModule,
+    AuthModule,
+    TrainingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
