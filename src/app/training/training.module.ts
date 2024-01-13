@@ -7,6 +7,7 @@ import { TrainingComponent } from './training.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material.module';
 import { StopTrainingComponent } from './current-training/stop-training.component';
+import { TrainingRoutingModule } from './training-routing.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { StopTrainingComponent } from './current-training/stop-training.componen
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
+    TrainingRoutingModule,
   ],
   exports: [
     TrainingComponent,

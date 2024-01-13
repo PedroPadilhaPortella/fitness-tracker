@@ -4,24 +4,9 @@
       "email": "pedro.kadjin.sg@gmail.com",
       "password": "pedro123",
       "id": "216"
-    },
-    {
-      "email": "admin@admin.gmail.com",
-      "password": "admin123",
-      "id": "87"
     }
   ],
   "loggedUsers": [
-    {
-      "email": "admin@admin.gmail.com",
-      "id": "87",
-      "espireDate": 1705165647857
-    },
-    {
-      "email": "pedro.kadjin.sg@gmail.com",
-      "id": "216",
-      "espireDate": 1705133160140
-    }
   ],
   "exercises": [
     {
@@ -72,6 +57,14 @@
       "duration": 0.6,
       "calories": 0.16,
       "date": "2024-01-11T02:44:45.832Z",
+      "state": "cancelled"
+    },
+    {
+      "id": "1705115675555",
+      "name": "Crunches",
+      "duration": 0.6,
+      "calories": 0.16,
+      "date": "2024-01-13T03:14:35.555Z",
       "state": "cancelled"
     }
   ]
