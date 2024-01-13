@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UIService } from '../../services/ui.service';
 import { AuthData } from '../../interfaces/auth-modal.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +11,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
+  isLoading = false;
 
   constructor(
     private authService: AuthService,
-    private snackBar: MatSnackBar,
+    private uiService: UIService,
     private fb: FormBuilder,
   ) { }
 
@@ -26,16 +27,17 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.isLoading = true;
     const authData: AuthData = { email: this.form.value.email, password: this.form.value.password }
     this.authService.login(authData).subscribe({
+      next: () => {
+        this.isLoading = false;
+      },
       error: (error) => {
         this.form.reset();
-        this.snackBar.open(error.message, 'Dismiss', { 
-          horizontalPosition: 'end', 
-          verticalPosition: 'bottom', 
-          duration: 3000,
-        })
-      },
+        this.uiService.showStackBar(error.message, 'Dismiss');
+        this.isLoading = false;
+      }
     });
   }
 }

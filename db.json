@@ -6,12 +6,23 @@
       "id": "216"
     },
     {
-      "email": "pedro.kadjin1.sg@gmail.com",
-      "password": "pedro2w2321",
-      "id": "706"
+      "email": "admin@admin.gmail.com",
+      "password": "admin123",
+      "id": "87"
     }
   ],
-  "loggedUsers": [],
+  "loggedUsers": [
+    {
+      "email": "admin@admin.gmail.com",
+      "id": "87",
+      "espireDate": 1705165647857
+    },
+    {
+      "email": "pedro.kadjin.sg@gmail.com",
+      "id": "216",
+      "espireDate": 1705133160140
+    }
+  ],
   "exercises": [
     {
       "id": "1",

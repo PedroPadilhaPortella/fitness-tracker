@@ -1,4 +1,4 @@
-import { TrainingService } from 'src/app/services/training.service';
+import { TrainingService } from '../services/training.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 

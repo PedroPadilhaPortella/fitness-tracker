@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Exercise } from '../interfaces/exercise.interface';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { LoadingStates, UIService } from './ui.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,25 +15,39 @@ export class TrainingService {
   exercisesChanged = new Subject<Exercise[]>();
   finishedExercisesChanged = new Subject<Exercise[]>();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private uiService: UIService,
+    private http: HttpClient,
+  ) { }
 
   fetchAvaliableExercises() {
-    return this.http.get<Exercise[]>('http://localhost:3000/exercises')
-      .subscribe((exercises) => {
+    this.uiService.loadingStateChanged.next(LoadingStates.LOADING);
+    return this.http.get<Exercise[]>('http://localhost:3000/exercises').subscribe({
+      next: (exercises) => {
         this.avaliableExercises = exercises
         this.exercisesChanged.next([...this.avaliableExercises])
-      })
+        this.uiService.loadingStateChanged.next(LoadingStates.COMPLETED);
+      },
+      error: (error) => {
+        this.uiService.showStackBar('Fetching Exercises Failed', 'Dismiss');
+        this.uiService.loadingStateChanged.next(LoadingStates.ERROR);
+      }
+    })
   }
 
   getRunningExercise() {
     return { ...this.runningExercise } as Exercise;
   }
-  
+
   fetchFinishedExercise() {
-    return this.http.get<Exercise[]>('http://localhost:3000/finishedExercises')
-      .subscribe((exercises) => {
+    return this.http.get<Exercise[]>('http://localhost:3000/finishedExercises').subscribe({
+      next: (exercises) => {
         this.finishedExercisesChanged.next(exercises)
-      })
+      },
+      error: (error) => {
+        this.uiService.showStackBar('Fetching Finished Exercises Failed', 'Dismiss');
+      }
+    })
   }
 
   startExercise(id: string) {
@@ -44,7 +59,7 @@ export class TrainingService {
     const exercise = {
       ...this.runningExercise,
       id: new Date().getTime().toString(),
-      date: new Date(), 
+      date: new Date(),
       state: 'completed'
     } as Exercise;
 
@@ -55,10 +70,10 @@ export class TrainingService {
   }
 
   cancelExercise(progress: number) {
-    const exercise = { 
-      ...this.runningExercise, 
+    const exercise = {
+      ...this.runningExercise,
       id: new Date().getTime().toString(),
-      date: new Date(), 
+      date: new Date(),
       duration: this.runningExercise!.duration * (progress / 100),
       calories: this.runningExercise!.calories * (progress / 100),
       state: 'cancelled'

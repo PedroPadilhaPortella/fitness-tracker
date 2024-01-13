@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { UIService } from '../../services/ui.service';
 import { AuthData } from '../../interfaces/auth-modal.interface';
 import { AuthService } from '../../services/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-signup',
@@ -11,10 +11,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class SignupComponent implements OnInit {
   maxDate: any;
+  isLoading = false;
 
   constructor(
     private authService: AuthService,
-    private snackBar: MatSnackBar,
+    private uiService: UIService,
   ) { }
   
   ngOnInit(): void {
@@ -23,14 +24,15 @@ export class SignupComponent implements OnInit {
   }
   
   onSubmit(form: NgForm) {
+    this.isLoading = true;
     const authData: AuthData = { email: form.value.email, password: form.value.password }
     this.authService.registerUser(authData).subscribe({
+      next: () => {
+        this.isLoading = false;
+      },
       error: (error) => {
-        this.snackBar.open(error.message, 'Dismiss', { 
-          horizontalPosition: 'end', 
-          verticalPosition: 'bottom', 
-          duration: 3000,
-        })
+        this.uiService.showStackBar(error.message, 'Dismiss');
+        this.isLoading = false;
       },
     });
   }

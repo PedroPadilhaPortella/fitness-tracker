@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
+  private EXPIRE_DATE = 1000 * 60 * 60 * 6 // 6 HOURS
   private isAuthenticate = false
   private loggedUser: LoggedUser | null = null
 
@@ -20,7 +21,9 @@ export class AuthService {
   ) { }
 
   isAuth() {
-    return this.isAuthenticate;
+    return this.isAuthenticate 
+    && this.loggedUser 
+    && (this.loggedUser.espireDate > new Date().getTime());
   }
 
   registerUser(data: AuthData) {
@@ -42,13 +45,12 @@ export class AuthService {
         this.loggedUser = user;
         this.loggedUserChange.next(user);
         this.router.navigate(['/training']);
+        this.manageExpireDate();
       })
     )
   }
 
   login(data: AuthData) {
-    // TODO: Check is the user already has an logged session,
-    // then delete if and replace, maybe using expire date
     return this.http.get<User[]>('http://localhost:3000/users')
     .pipe(
       map((users) => {
@@ -64,6 +66,7 @@ export class AuthService {
         this.loggedUser = user;
         this.loggedUserChange.next(user);
         this.router.navigate(['/training']);
+        this.manageExpireDate();
       })
     );
   }
@@ -92,6 +95,16 @@ export class AuthService {
   }
 
   private setExpireDate(): number {
-    return new Date().setDate(new Date().getDate() + 1);
+    // return new Date().setDate(new Date().getDate() + 1);
+    return new Date().setMilliseconds(new Date().getMilliseconds() + this.EXPIRE_DATE);
+  }
+
+  private manageExpireDate() {
+    setTimeout(() => {
+      this.isAuthenticate = false;
+      this.loggedUser = null;
+      this.loggedUserChange.next(null);
+      this.router.navigate(['/login'])
+    }, this.EXPIRE_DATE);
   }
 }
