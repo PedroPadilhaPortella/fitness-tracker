@@ -10,6 +10,8 @@ import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { MaterialModule } from './shared/material.module';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     AppRoutingModule,
     MaterialModule,
     AuthModule,
+    StoreModule.forRoot(reducers),
   ],
   providers: [],
   bootstrap: [AppComponent],

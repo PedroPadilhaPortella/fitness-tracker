@@ -1,8 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Exercise } from '../interfaces/exercise.interface';
-import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { LoadingStates, UIService } from './ui.service';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, Subject } from 'rxjs';
+import * as fromRoot from '../app.reducer';
+import { Exercise } from '../interfaces/exercise.interface';
+import * as UI from '../shared/ui.actions';
+import { UIService } from './ui.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,19 +21,20 @@ export class TrainingService {
   constructor(
     private uiService: UIService,
     private http: HttpClient,
+    private store: Store<fromRoot.State>,
   ) { }
 
   fetchAvaliableExercises() {
-    this.uiService.loadingStateChanged.next(LoadingStates.LOADING);
+    this.store.dispatch(new UI.StartLoading());
     return this.http.get<Exercise[]>('http://localhost:3000/exercises').subscribe({
       next: (exercises) => {
         this.avaliableExercises = exercises
         this.exercisesChanged.next([...this.avaliableExercises])
-        this.uiService.loadingStateChanged.next(LoadingStates.COMPLETED);
+        this.store.dispatch(new UI.StopLoading());
       },
       error: (error) => {
         this.uiService.showStackBar('Fetching Exercises Failed', 'Dismiss');
-        this.uiService.loadingStateChanged.next(LoadingStates.ERROR);
+        this.store.dispatch(new UI.StopLoading());
       }
     })
   }

@@ -1,9 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject, map, switchMap, tap } from 'rxjs';
 import { AuthData } from '../interfaces/auth-modal.interface';
 import { LoggedUser, User } from '../interfaces/user.interface';
-import { Subject, catchError, map, switchMap, tap } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'

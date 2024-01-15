@@ -15,9 +15,9 @@
         </mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" *ngIf="!isLoading" [disabled]="form.invalid">
+    <button mat-raised-button color="primary" type="submit" *ngIf="!(isLoading$ | async)" [disabled]="form.invalid">
       Login
     </button>
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <mat-spinner *ngIf="(isLoading$ | async)"></mat-spinner>
   </form>
 </section>
