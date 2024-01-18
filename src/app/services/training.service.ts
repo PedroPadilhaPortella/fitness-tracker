@@ -1,35 +1,29 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import * as fromRoot from '../app.reducer';
+import { Observable, Subject, switchMap, take } from 'rxjs';
+import * as fromTraining from '../shared/training/training.reducer';
 import { Exercise } from '../interfaces/exercise.interface';
-import * as UI from '../shared/ui.actions';
+import * as UI from '../shared/ui/ui.actions';
+import * as Training from '../shared/training/training.actions';
 import { UIService } from './ui.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainingService {
-  private avaliableExercises: Exercise[] = []
-  private runningExercise: Exercise | null = null;
-
-  exerciseChanged = new Subject<Exercise | null>();
-  exercisesChanged = new Subject<Exercise[]>();
-  finishedExercisesChanged = new Subject<Exercise[]>();
 
   constructor(
     private uiService: UIService,
+    private store: Store<fromTraining.State>,
     private http: HttpClient,
-    private store: Store<fromRoot.State>,
   ) { }
 
   fetchAvaliableExercises() {
     this.store.dispatch(new UI.StartLoading());
     return this.http.get<Exercise[]>('http://localhost:3000/exercises').subscribe({
       next: (exercises) => {
-        this.avaliableExercises = exercises
-        this.exercisesChanged.next([...this.avaliableExercises])
+        this.store.dispatch(new Training.SetAvaliableExercises(exercises));
         this.store.dispatch(new UI.StopLoading());
       },
       error: (error) => {
@@ -39,14 +33,10 @@ export class TrainingService {
     })
   }
 
-  getRunningExercise() {
-    return { ...this.runningExercise } as Exercise;
-  }
-
   fetchFinishedExercise() {
     return this.http.get<Exercise[]>('http://localhost:3000/finishedExercises').subscribe({
       next: (exercises) => {
-        this.finishedExercisesChanged.next(exercises)
+        this.store.dispatch(new Training.SetFinishedExercises(exercises));
       },
       error: (error) => {
         this.uiService.showStackBar('Fetching Finished Exercises Failed', 'Dismiss');
@@ -55,37 +45,45 @@ export class TrainingService {
   }
 
   startExercise(id: string) {
-    this.runningExercise = this.avaliableExercises.find((exercise) => exercise.id == id) || null;
-    this.exerciseChanged.next({ ...this.runningExercise } as Exercise);
+    this.store.dispatch(new Training.StartExercise(id));
   }
 
   completeExercise() {
-    const exercise = {
-      ...this.runningExercise,
-      id: new Date().getTime().toString(),
-      date: new Date(),
-      state: 'completed'
-    } as Exercise;
+    this.store.select(fromTraining.getActiveExercise).pipe(
+      take(1),
+      switchMap((runningExercise) => {
+        const exercise = {
+          ...runningExercise,
+          id: new Date().getTime().toString(),
+          date: new Date(),
+          state: 'completed'
+        } as Exercise;
 
-    this.saveExercise(exercise).subscribe((response) => {
-      this.runningExercise = null;
-      this.exerciseChanged.next(null);
+        return this.saveExercise(exercise)
+      })
+    ).subscribe(() => {
+      this.store.dispatch(new Training.StopExercise());
     });
   }
 
   cancelExercise(progress: number) {
-    const exercise = {
-      ...this.runningExercise,
-      id: new Date().getTime().toString(),
-      date: new Date(),
-      duration: this.runningExercise!.duration * (progress / 100),
-      calories: this.runningExercise!.calories * (progress / 100),
-      state: 'cancelled'
-    } as Exercise;
+    this.store.select(fromTraining.getActiveExercise).pipe(
+      take(1),
+      switchMap((runningExercise) => {
+        console.log(runningExercise)
+        const exercise = {
+          ...runningExercise,
+          id: new Date().getTime().toString(),
+          date: new Date(),
+          duration: runningExercise!.duration * (progress / 100),
+          calories: runningExercise!.calories * (progress / 100),
+          state: 'cancelled'
+        } as Exercise;
 
-    this.saveExercise(exercise).subscribe((response) => {
-      this.runningExercise = null;
-      this.exerciseChanged.next(null);
+        return this.saveExercise(exercise)
+      })
+    ).subscribe(() => {
+      this.store.dispatch(new Training.StopExercise());
     });
   }
 

@@ -30,5 +30,4 @@ export class SignupComponent implements OnInit {
     const authData: AuthData = { email: form.value.email, password: form.value.password }
     this.authService.registerUser(authData);
   }
-
 }

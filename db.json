@@ -10,7 +10,7 @@
     {
       "email": "pedro.kadjin.sg@gmail.com",
       "id": "216",
-      "espireDate": 1705603535426
+      "espireDate": 1705612247206
     }
   ],
   "exercises": [
@@ -41,36 +41,12 @@
   ],
   "finishedExercises": [
     {
-      "id": "1704927555129",
-      "name": "Crunches",
-      "duration": 0.6,
-      "calories": 0.16,
-      "date": "2024-01-10T22:59:15.129Z",
-      "state": "cancelled"
-    },
-    {
-      "id": "1704930246221",
+      "id": "1705590396576",
       "name": "Crunches",
       "duration": 30,
       "calories": 8,
-      "date": "2024-01-10T23:44:06.221Z",
+      "date": "2024-01-18T15:06:36.576Z",
       "state": "completed"
-    },
-    {
-      "id": "1704941085832",
-      "name": "Crunches",
-      "duration": 0.6,
-      "calories": 0.16,
-      "date": "2024-01-11T02:44:45.832Z",
-      "state": "cancelled"
-    },
-    {
-      "id": "1705115675555",
-      "name": "Crunches",
-      "duration": 0.6,
-      "calories": 0.16,
-      "date": "2024-01-13T03:14:35.555Z",
-      "state": "cancelled"
     }
   ]
 }

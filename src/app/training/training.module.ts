@@ -1,13 +1,15 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { MaterialModule } from '../shared/material.module';
 import { CurrentTrainingComponent } from './current-training/current-training.component';
+import { StopTrainingComponent } from './current-training/stop-training.component';
 import { NewTrainingComponent } from './new-training/new-training.component';
 import { PastTrainingsComponent } from './past-trainings/past-trainings.component';
-import { TrainingComponent } from './training.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../shared/material.module';
-import { StopTrainingComponent } from './current-training/stop-training.component';
 import { TrainingRoutingModule } from './training-routing.module';
+import { TrainingComponent } from './training.component';
+import { trainingReducer } from '../shared/training/training.reducer';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import { TrainingRoutingModule } from './training-routing.module';
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
+    StoreModule.forFeature('training', trainingReducer),
     TrainingRoutingModule,
   ],
   exports: [

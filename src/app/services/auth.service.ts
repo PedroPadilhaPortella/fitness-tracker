@@ -6,8 +6,8 @@ import { AuthData } from '../interfaces/auth-modal.interface';
 import { LoggedUser, User } from '../interfaces/user.interface';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../app.reducer';
-import * as UI from '../shared/ui.actions';
-import * as Auth from '../shared/auth.actions';
+import * as UI from '../shared/ui/ui.actions';
+import * as Auth from '../shared/auth/auth.actions';
 import { UIService } from './ui.service';
 
 @Injectable({
