@@ -5,8 +5,6 @@ import { Observable } from 'rxjs';
 import * as fromRoot from '../../app.reducer';
 import { AuthData } from '../../interfaces/auth-modal.interface';
 import { AuthService } from '../../services/auth.service';
-import { UIService } from '../../services/ui.service';
-import * as UI from '../../shared/ui.actions';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +17,6 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private uiService: UIService,
     private store: Store<fromRoot.State>,
     private fb: FormBuilder,
   ) { }
@@ -33,17 +30,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.store.dispatch(new UI.StartLoading());
     const authData: AuthData = { email: this.form.value.email, password: this.form.value.password }
-    this.authService.login(authData).subscribe({
-      next: () => {
-        this.store.dispatch(new UI.StopLoading());
-      },
-      error: (error) => {
-        this.form.reset();
-        this.uiService.showStackBar(error.message, 'Dismiss');
-        this.store.dispatch(new UI.StopLoading());
-      }
-    });
+    this.form.reset();
+    this.authService.login(authData);
   }
 }

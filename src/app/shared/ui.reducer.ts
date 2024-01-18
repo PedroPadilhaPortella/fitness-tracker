@@ -9,7 +9,7 @@ const initialState: State = {
   isLoading: false
 }
 
-export function uiReducer(state = initialState, action: Action) {
+export function uiReducer(state: State = initialState, action: Action): State {
   switch (action.type) {
     case START_LOADING:
       return { isLoading: true } 

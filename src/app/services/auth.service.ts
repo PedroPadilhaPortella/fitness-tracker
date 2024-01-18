@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { Subject, map, switchMap, tap } from 'rxjs';
 import { AuthData } from '../interfaces/auth-modal.interface';
 import { LoggedUser, User } from '../interfaces/user.interface';
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../app.reducer';
+import * as UI from '../shared/ui.actions';
+import * as Auth from '../shared/auth.actions';
+import { UIService } from './ui.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,20 +21,23 @@ export class AuthService {
   loggedUserChange = new Subject<LoggedUser | null>();
 
   constructor(
+    private store: Store<fromRoot.State>,
+    private uiService: UIService,
     private http: HttpClient,
     private router: Router,
   ) { }
 
   isAuth() {
-    return this.isAuthenticate 
-    && this.loggedUser 
-    && (this.loggedUser.espireDate > new Date().getTime());
+    return this.isAuthenticate
+      && this.loggedUser
+      && (this.loggedUser.espireDate > new Date().getTime());
   }
 
   registerUser(data: AuthData) {
-    return this.http.get<User[]>('http://localhost:3000/users').pipe(
+    this.store.dispatch(new UI.StartLoading());
+    this.http.get<User[]>('http://localhost:3000/users').pipe(
       switchMap((users) => {
-        const user = { ...data, id: Math.round(Math.random() * 1000).toString()}
+        const user = { ...data, id: Math.round(Math.random() * 1000).toString() }
         const emailAlreadyTaken = users.find((usr) => usr.email === user.email)
         if (emailAlreadyTaken) throw new Error('Email already taken');
         return this.http.post<User>('http://localhost:3000/users', user)
@@ -48,14 +56,25 @@ export class AuthService {
         this.manageExpireDate();
       })
     )
+      .subscribe({
+        next: () => {
+          this.store.dispatch(new Auth.SetAuthenticated());
+          this.store.dispatch(new UI.StopLoading());
+        },
+        error: (error) => {
+          this.uiService.showStackBar(error.message, 'Dismiss');
+          this.store.dispatch(new Auth.SetUnauthenticated());
+          this.store.dispatch(new UI.StopLoading());
+        },
+      });
   }
 
   login(data: AuthData) {
-    return this.http.get<User[]>('http://localhost:3000/users')
-    .pipe(
+    this.store.dispatch(new UI.StartLoading());
+    this.http.get<User[]>('http://localhost:3000/users').pipe(
       map((users) => {
         const user = users.find(user => user.email == data.email && user.password == data.password);
-        if(!user) throw new Error('User not found');
+        if (!user) throw new Error('User not found');
         return { email: user.email, id: user.id, espireDate: this.setExpireDate() } as LoggedUser;
       }),
       switchMap((user) => {
@@ -68,24 +87,34 @@ export class AuthService {
         this.router.navigate(['/training']);
         this.manageExpireDate();
       })
-    );
+    ).subscribe({
+      next: () => {
+        this.store.dispatch(new Auth.SetAuthenticated());
+        this.store.dispatch(new UI.StopLoading());
+      },
+      error: (error) => {
+        this.uiService.showStackBar(error.message, 'Dismiss');
+        this.store.dispatch(new Auth.SetUnauthenticated());
+        this.store.dispatch(new UI.StopLoading());
+      }
+    });
   }
 
   logout() {
     this.http.delete(`http://localhost:3000/loggedUsers/${this.loggedUser?.id}`)
-    .subscribe((response) => {
-      this.isAuthenticate = false;
-      this.loggedUser = null;
-      this.loggedUserChange.next(null);
-      this.router.navigate(['/login']);
-    })
+      .subscribe((response) => {
+        this.isAuthenticate = false;
+        this.loggedUser = null;
+        this.loggedUserChange.next(null);
+        this.router.navigate(['/login']);
+      })
   }
 
   private storeLoginSession(loggedUser: LoggedUser) {
     return this.http.get<LoggedUser[]>('http://localhost:3000/loggedUsers').pipe(
       switchMap((loggedUsers) => {
         const userAlreadyLogged = loggedUsers.find((user) => user.email == loggedUser.email);
-        if(userAlreadyLogged) {
+        if (userAlreadyLogged) {
           return this.http.put<LoggedUser>(`http://localhost:3000/loggedUsers/${loggedUser.id}`, loggedUser);
         } else {
           return this.http.post<LoggedUser>('http://localhost:3000/loggedUsers', loggedUser);
